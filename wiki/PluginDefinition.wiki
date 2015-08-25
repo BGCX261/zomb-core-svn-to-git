@@ -1,0 +1,85 @@
+#summary Explanation of the plugin format
+
+= Introduction =
+
+This is a quick run-down of the plugin definition format.
+
+
+= Details =
+
+Example plugin:
+{{{
+{
+    "name": "myplugin",
+    "help": "General help or description for my plugin",
+    "commands": [
+        {
+            "name": "mycommand",
+            "help": "Help specific to this command",
+            "patterns": [
+                "pattern": "hello .+",
+                "addressedOnly": true,
+            ],
+        },
+    ],
+}
+}}}
+
+With comments:
+
+{{{
+{
+    /*
+     * The plugin name, required. This is what will be used to call this plugin
+     */
+    "name": "myplugin",
+    
+    /*
+     * Plugin help, optional. This is generally a description of the plugin.
+     */
+    "help": "General help or description for my plugin",
+    
+    /*
+     * List of commands. There's no limit to the number of commands allowed per plugin. 
+     */
+    "commands": [
+        {
+            /*
+             * The command name, required. This is passed to your plugin's URL so you know 
+             * what command the user requested. If you name the command the same as the
+             * plugin, it will become the default command when this plugin is called.
+             */
+            "name": "mycommand",
+            
+            /*
+             * Command-specific help. Should describe what input this command requires,
+             * and what the user should expect to get back in return.
+             */
+            "help": "Help specific to this command",
+            
+            /*
+             * Regular expression patterns for this command, optional. This allows your 
+             * plugin to process any input, whether or not it is directed to this plugin
+             * or command. In the example below, whenever input starting with "hello " is
+             * received, this pattern will be matched, and your plugin will receive the
+             * "mycommand" command.
+             */
+            "patterns": [
+                /*
+                 * A regular expression pattern. This will be compiled at the time your
+                 * plugin is loaded, preventing your plugin from loading if it is invalid.
+                 */
+                "pattern": "hello .+",
+                
+                /*
+                 * Only attempt to match this pattern if the bot is addressed directly.
+                 * If false, allows your plugin to match messages which are't necessarily
+                 * directed at the bot specifically. Primarily for IRC usage. Defaults to
+                 * true.
+                 */
+                "addressedOnly": true,
+            ],
+        },
+    ],
+}
+}}}

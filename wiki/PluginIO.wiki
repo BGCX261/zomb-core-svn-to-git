@@ -1,0 +1,94 @@
+#summary Describes the data your plugin will receive when it is called, and the data it is expected to return.
+
+= Introduction =
+
+Describes the data your plugin will receive when it is called, and the data it is expected to return.
+
+
+= Details =
+
+== Input ==
+
+When one of your plugin's commands or regex patterns matches user input, a request to your plugin's URL will be made, with the command as a parameter on the URL, other information and input passed via a JSON object in the body of the request (POST).
+
+For example, your plugin with a command named "hello", located at `http://example.net/plugin.aspx` will be called as follows via a POST request:
+
+{{{
+http://example.net/plugin.aspx?command=hello
+}}}
+
+It will then be passed the following POST parameters:
+
+{{{
+{
+    "source": "irc.server.net/#chan",
+    "sender": "joesoap",
+    "direct": true,
+    "time": "Thu Jan 03 19:42:24 CAT 2013",
+    "query": "hello cool world",
+    "params": [
+            "cool",
+            "world"
+        ]
+}
+}}}
+
+== Output ==
+
+After processing the input, your response may look like the following:
+
+{{{
+{
+    "image": "http://example.net/my_pic.gif",
+    "multiLine": "force",
+    "error": false,
+    "response": [
+            "this is line one",
+            "there can be more than one line",
+        ],
+}
+}}}
+
+With comments:
+
+{{{
+{
+    /*
+     * An optional image URL. Some clients may be able to make use of this.
+     */
+    "image": "http://example.net/my_pic.gif",
+
+    /*
+     * If the plugin response spans multiple lines, this can give the client a suggestion on 
+     * multi-line handling. A value of "force" tells the client to print each line, if possible.
+     * If not present, the client should decide how to present multi-line output.
+     */
+    "multiLine": "force",
+
+    /*
+     * Optionally, the plugin can specify whether this response is an error or not. Client 
+     * implementations may make use of this value to present the response appropriately.
+     */
+    "error": false,
+
+    /*
+     * The response lines. There can be multiple lines, though consider that not all clients
+     * might be able to present this information in the way you intend.
+     * Plugin output may contain Markdown formatting - however rendering will be left to the
+     * client, so not all formatting may be obeyed depending on the client's capabilities,
+     * for example, IRC or plain text.
+     */
+    "response": [
+            "this is line one",
+            "there can be more than one line",
+        ],
+}
+}}}
+
+
+
+= TODO =
+
+ * ~~Change plugin input to a JSON message, rather than query params, for better consistency with other IO formats.~~
+ * ~~Params need to change to a more array-friendly format.~~
+ * ~~The entire original message should probably be passed to the plugin, or at least offer an option in the command definition to enable the entire message to be passed through.~~
